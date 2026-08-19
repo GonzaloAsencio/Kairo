@@ -25,6 +25,17 @@
             "commandWindows": "if exist \".agents/skills/impeccable/scripts/hook.mjs\" (node \".agents/skills/impeccable/scripts/hook.mjs\" & exit /b)"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -f \".agents/scripts/token-log-codex.mjs\" ] || node \".agents/scripts/token-log-codex.mjs\"",
+            "timeout": 10,
+            "statusMessage": "Logging token usage",
+            "commandWindows": "if exist \".agents/scripts/token-log-codex.mjs\" (node \".agents/scripts/token-log-codex.mjs\" & exit /b)"
+          }
+        ]
       }
     ]
   }
