@@ -27,19 +27,67 @@ body:
     validations:
       required: true
   - type: dropdown
-    id: area
+    id: module
     attributes:
-      label: Affected Area
+      label: Módulo
+      description: Módulo dueño de este cambio. Define quién lo toma. Ver AGENTS.md §3.
       options:
-        - Sesión
-        - Partida
-        - Revisión
-        - Gatillos
-        - Infraestructura / Setup
-        - Documentación
-        - Otro
+        - "match (P — Partida)"
+        - "session (S — Sesión)"
+        - "review (R — Revisión)"
+        - "triggers (G — Gatillos)"
+        - "core / infra / ui (territorio compartido — revisión de los dos)"
+        - "app (shell, routing, nav)"
+        - "tooling / CI / docs"
     validations:
       required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Alcance por archivo
+      description: >-
+        Las rutas exactas que este cambio puede tocar, una por línea. Se admiten globs.
+        CI compara los archivos del PR contra esta lista y falla si te salís.
+        Si no sabés el alcance todavía, el issue no está listo.
+      placeholder: |
+        src/modules/match/**
+        src/modules/match/__tests__/**
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Criterios de aceptación
+      description: >-
+        Verificables: una persona tiene que poder decir sí o no mirando el resultado.
+        "Que funcione bien" no es un criterio.
+      placeholder: |
+        - [ ] Guardar una entrada con la red apagada la persiste local y encola la op en el outbox
+        - [ ] El botón vuelve a estado normal en menos de 300ms, sin esperar red
+    validations:
+      required: true
+  - type: dropdown
+    id: test_level
+    attributes:
+      label: Nivel de test esperado
+      description: Ver ADR-0006 para qué se testea y qué explícitamente no.
+      options:
+        - "unit"
+        - "component"
+        - "integration"
+        - "e2e"
+        - "unit + component"
+        - "ninguno (justificar abajo)"
+    validations:
+      required: true
+  - type: input
+    id: adr
+    attributes:
+      label: ADR relacionado
+      description: Obligatorio si el cambio altera una decisión de arquitectura. Si hace falta un ADR nuevo, decilo acá.
+      placeholder: "ADR-0003, o: necesita ADR nuevo sobre X"
+    validations:
+      required: false
   - type: textarea
     id: alternatives
     attributes:

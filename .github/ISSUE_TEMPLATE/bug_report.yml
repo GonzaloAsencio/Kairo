@@ -39,6 +39,79 @@ body:
       description: Include errors or logs if relevant
     validations:
       required: true
+  - type: dropdown
+    id: module
+    attributes:
+      label: Módulo
+      description: Módulo donde vive el bug. Ver AGENTS.md §3.
+      options:
+        - "match (P — Partida)"
+        - "session (S — Sesión)"
+        - "review (R — Revisión)"
+        - "triggers (G — Gatillos)"
+        - "core / infra / ui (territorio compartido — revisión de los dos)"
+        - "app (shell, routing, nav)"
+        - "tooling / CI / docs"
+        - "no sé todavía"
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Alcance por archivo
+      description: >-
+        Las rutas que el arreglo puede tocar, una por línea. CI compara los archivos
+        del PR contra esta lista. Si todavía no sabés dónde está el bug, dejalo vacío:
+        el issue no puede recibir agent-ready hasta que se complete.
+      placeholder: |
+        src/infra/sync/**
+    validations:
+      required: false
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Criterios de aceptación
+      description: Cómo sabemos que está arreglado. Incluí el test de regresión que debería existir.
+      placeholder: |
+        - [ ] Los pasos de reproducción ya no disparan el error
+        - [ ] Test de regresión en src/infra/sync/__tests__/outbox.test.ts
+    validations:
+      required: true
+  - type: dropdown
+    id: test_level
+    attributes:
+      label: Nivel de test esperado
+      description: Todo bug arreglado lleva un test que falla antes del fix. Ver ADR-0006.
+      options:
+        - "unit"
+        - "component"
+        - "integration"
+        - "e2e"
+        - "ninguno (justificar abajo)"
+    validations:
+      required: true
+  - type: dropdown
+    id: data_risk
+    attributes:
+      label: ¿Puede corromper o perder datos del usuario?
+      description: >-
+        Si sí, escala a máxima prioridad y no se automatiza el arreglo.
+        El diario del usuario es el activo más valioso del proyecto.
+      options:
+        - "No"
+        - "Sí — pérdida de datos"
+        - "Sí — corrupción de datos"
+        - "Sí — falla de sincronización"
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Entorno
+      description: Navegador, sistema operativo, dispositivo, y si estabas online u offline.
+      placeholder: "Chrome 141, Android 15, PWA instalada, offline"
+    validations:
+      required: false
   - type: textarea
     id: logs
     attributes:
