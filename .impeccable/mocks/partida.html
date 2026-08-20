@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kairo — Partida (mock)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<!--
+  THESIS: Cada partida es una ficha de catálogo, no una tarjeta de hábito —
+  el resultado permanece codificado hasta que ya fallaste el veredicto del proceso.
+  OWN-WORLD: Negro mate absorbente, tinta blanco-hueso tipo trazo grabado, un
+  único acento ámbar reservado para el punto ciego; grotesk geométrico a escala
+  de titular para el número de entrada, monoespaciado de sistema para toda medición.
+  STORY: El jugador entra, ve su número de entrada, carga cinco campos con
+  botones y una sola reflexión en prosa, cierra el proceso con una regla dura,
+  y solo entonces destapa el resultado codificado.
+  FIRST VIEWPORT: Encabezado ENTRADA Nº047 en grotesk a escala de póster con
+  franja codificada; debajo, los campos de proceso en una sola columna con
+  reglas finas; el CTA ámbar fijo al pie.
+  FORM: Sello de Catálogo (Factory Records), candidato de la ronda audaz,
+  challenger-saville; seed key 50567dea.
+  FINISH: unreviewed and undocumented is unfinished; this build ends with the
+  finish review, the verdict, DESIGN.md, and every shipping raster carrying
+  its provenance.
+-->
+<style>
+  :root {
+    --bg: #0a0a09;
+    --bg-raised: #121210;
+    --ink: #f2f0ea;
+    --ink-dim: #9a978d;
+    --ink-faint: #57554d;
+    --accent: #f4a623;
+    --accent-ink: #1a1206;
+    --line: #2a2926;
+    --line-strong: #43413a;
+    --radius: 3px;
+  }
+
+  * { box-sizing: border-box; }
+
+  ::selection { background: var(--accent); color: var(--accent-ink); }
+
+  html { color-scheme: dark; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 6px; }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .mono {
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .shell {
+    display: grid;
+    grid-template-columns: 1fr;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 920px) {
+    .shell {
+      grid-template-columns: 220px minmax(0, 460px) 1fr;
+      align-items: start;
+      padding-top: 48px;
+    }
+  }
+
+  /* ---- catalog rail (desktop only) ---- */
+  .rail {
+    display: none;
+    padding: 8px 28px 0 32px;
+    border-right: 1px solid var(--line);
+  }
+  @media (min-width: 920px) { .rail { display: block; } }
+
+  .rail-title {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--ink-dim);
+    margin: 0 0 18px;
+  }
+
+  .rail-list { list-style: none; margin: 0; padding: 0; }
+  .rail-list li {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    color: var(--ink-faint);
+    padding: 7px 0;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--line);
+  }
+  .rail-list li.active { color: var(--accent); }
+  .rail-list li.active::after { content: "●"; font-size: 8px; align-self: center; }
+
+  /* ---- main column ---- */
+  .main { padding: 0 18px 120px; }
+  @media (min-width: 480px) { .main { padding: 0 28px 120px; max-width: 460px; margin: 0 auto; } }
+  @media (min-width: 920px) { .main { margin: 0; padding: 0 28px 64px; } }
+
+  .topbar {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 22px 0 16px;
+  }
+
+  .brand { font-size: 12px; letter-spacing: 0.2em; color: var(--ink); font-weight: 600; }
+  .brand span { color: var(--ink-dim); font-weight: 400; letter-spacing: 0.02em; margin-left: 10px; }
+
+  .code-strip { display: flex; gap: 3px; }
+  .code-strip i {
+    width: 10px; height: 10px; display: block; background: var(--line-strong);
+  }
+  .code-strip i.on { background: var(--accent); }
+
+  .entry-head {
+    padding: 18px 0 22px;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .entry-eyebrow { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: 0.16em; color: var(--ink-dim); margin: 0 0 2px; }
+  .entry-num {
+    font-family: "Archivo", sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.6rem, 11vw, 3.6rem);
+    line-height: 0.92;
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+  .entry-meta { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--ink-dim); margin-top: 6px; }
+
+  .pulse { width: 84px; height: 84px; flex: none; }
+  .pulse circle, .pulse line { stroke: var(--line-strong); stroke-width: 1; fill: none; }
+  .pulse polygon { fill: rgba(244,166,35,0.12); stroke: var(--accent); stroke-width: 1.4; }
+
+  /* ---- fields ---- */
+  .field {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .field-label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--ink-dim);
+    margin: 0 0 10px;
+  }
+  .field-hint { font-size: 12.5px; color: var(--ink-faint); margin: 8px 0 0; line-height: 1.5; }
+
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 380px) { .row-2 { grid-template-columns: 1fr; } }
+
+  .field input[type="text"],
+  .field input[type="number"],
+  .field input[type="url"],
+  .field textarea {
+    width: 100%;
+    background: var(--bg-raised);
+    border: 1px solid var(--line-strong);
+    color: var(--ink);
+    font-size: 15px;
+    padding: 11px 12px;
+    border-radius: var(--radius);
+    font-family: inherit;
+  }
+  .field input[type="number"] { font-family: "JetBrains Mono", monospace; font-size: 17px; }
+  .field textarea { min-height: 92px; resize: vertical; line-height: 1.5; }
+  .field input::placeholder, .field textarea::placeholder { color: var(--ink-faint); }
+  .field input:focus, .field textarea:focus { border-color: var(--accent); }
+
+  .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12.5px;
+    letter-spacing: 0.03em;
+    padding: 8px 13px;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--ink-dim);
+    border-radius: var(--radius);
+    cursor: pointer;
+  }
+  .chip:hover { border-color: var(--ink-dim); color: var(--ink); }
+  .chip.selected { border-color: var(--accent); color: var(--accent); background: rgba(244,166,35,0.08); }
+  .chip.add { color: var(--ink-faint); border-style: dashed; }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 26px 0;
+    color: var(--ink-faint);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+  }
+  .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--line-strong); }
+
+  /* ---- coded reveal (result + attribution) ---- */
+  .coded {
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 26px;
+  }
+  .coded > summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .coded > summary::-webkit-details-marker { display: none; }
+  .coded-label { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: 0.12em; color: var(--ink-dim); }
+  .coded-strip { display: flex; gap: 3px; flex: 1; margin: 0 14px; }
+  .coded-strip i { flex: 1; height: 14px; background: var(--line-strong); }
+  .coded-reveal-btn {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    background: transparent;
+    padding: 6px 10px;
+    border-radius: var(--radius);
+    white-space: nowrap;
+  }
+  .coded[open] .coded-reveal-btn::after { content: " ▴"; }
+  .coded:not([open]) .coded-reveal-btn::after { content: " ▾"; }
+  .coded[open] .coded-strip i:nth-child(1) { background: var(--accent); }
+
+  .coded-body { padding-top: 18px; }
+  .coded-body .field { padding-top: 0; padding-bottom: 18px; border: none; }
+  .coded-body .field:last-child { padding-bottom: 0; }
+
+  .save-bar {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    background: linear-gradient(to top, var(--bg) 55%, transparent);
+    padding: 28px 18px 20px;
+    display: flex;
+    justify-content: center;
+  }
+  @media (min-width: 920px) { .save-bar { left: 220px; } }
+
+  .save-btn {
+    width: 100%;
+    max-width: 460px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    border: none;
+    font-family: "JetBrains Mono", monospace;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    padding: 15px;
+    border-radius: var(--radius);
+    cursor: pointer;
+  }
+  .save-btn:hover { filter: brightness(1.08); }
+
+  /* ---- bottom nav (mobile) ---- */
+  .tabnav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    display: none;
+  }
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 13px 4px 11px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--ink-faint);
+    border-bottom: 2px solid transparent;
+  }
+  .tab .code { display: block; font-size: 9px; color: var(--ink-faint); margin-bottom: 3px; }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab.active .code { color: var(--accent); }
+
+  .topband { padding-top: 46px; }
+
+  /* ---- right rail (desktop): recent entries echo ---- */
+  .side { display: none; padding: 48px 32px 0 8px; }
+  @media (min-width: 920px) { .side { display: block; } }
+  .side-title { font-size: 11px; letter-spacing: 0.14em; color: var(--ink-dim); margin: 0 0 16px; }
+  .side-item {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .side-item .n { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--ink-dim); }
+  .side-item .r { display: flex; gap: 3px; margin-top: 8px; }
+  .side-item .r i { width: 8px; height: 8px; background: var(--line-strong); }
+  .side-item.blind .n { color: var(--accent); }
+  .side-item.blind .r i:first-child { background: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="tabs tabnav">
+  <div class="tab"><span class="code">S</span>SESIÓN</div>
+  <div class="tab active"><span class="code">P</span>PARTIDA</div>
+  <div class="tab"><span class="code">R</span>REVISIÓN</div>
+  <div class="tab"><span class="code">G</span>GATILLOS</div>
+</div>
+
+<div class="shell">
+
+  <nav class="rail">
+    <p class="rail-title">CATÁLOGO</p>
+    <ul class="rail-list">
+      <li>S · SESIÓN</li>
+      <li class="active">P · PARTIDA</li>
+      <li>R · REVISIÓN</li>
+      <li>G · GATILLOS</li>
+    </ul>
+  </nav>
+
+  <main class="main topband">
+    <div class="topbar">
+      <div class="brand">KAIRO<span>diario de decisiones · proceso ≠ resultado</span></div>
+      <div class="code-strip" aria-hidden="true">
+        <i></i><i></i><i class="on"></i><i></i><i></i>
+      </div>
+    </div>
+
+    <div class="entry-head">
+      <div>
+        <p class="entry-eyebrow">ENTRADA</p>
+        <p class="entry-num">Nº047</p>
+        <p class="entry-meta">PARTIDA · 18 AGO · 22:41</p>
+      </div>
+      <svg class="pulse" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="42"></circle>
+        <circle cx="50" cy="50" r="26"></circle>
+        <line x1="50" y1="8" x2="50" y2="92"></line>
+        <line x1="8" y1="50" x2="92" y2="50"></line>
+        <line x1="18" y1="18" x2="82" y2="82"></line>
+        <line x1="82" y1="18" x2="18" y2="82"></line>
+        <polygon points="50,14 78,50 58,60 22,52 44,40"></polygon>
+      </svg>
+    </div>
+
+    <div class="field row-2">
+      <div>
+        <p class="field-label">TURNO CRÍTICO</p>
+        <input type="number" value="4" />
+      </div>
+      <div>
+        <p class="field-label">REPLAY (LINK U ID)</p>
+        <input type="url" placeholder="opcional" />
+      </div>
+    </div>
+
+    <div class="field">
+      <p class="field-label">QUÉ SENTÍ</p>
+      <div class="chip-row">
+        <button class="chip">PRISA</button>
+        <button class="chip selected">MIEDO</button>
+        <button class="chip">EUFORIA</button>
+        <button class="chip">NADA</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <p class="field-label">¿HABÍA INFO QUE NO USASTE?</p>
+      <div class="chip-row">
+        <button class="chip selected">SÍ — recursos abiertos</button>
+        <button class="chip">NO</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <p class="field-label">QUÉ PENSASTE EN ESE MOMENTO</p>
+      <textarea placeholder="El único campo de texto libre. Lo que pensabas, no lo que jugaste.">Tenía sus recursos abiertos a la vista y jugué como si no existieran.</textarea>
+      <p class="field-hint">Cinco minutos, sin releer la partida. Lo que importa es lo que pensabas.</p>
+    </div>
+
+    <div class="field">
+      <p class="field-label">¿DECISIÓN BUENA CON LO QUE SABÍAS EN ESE MOMENTO?</p>
+      <div class="chip-row">
+        <button class="chip">SÍ</button>
+        <button class="chip selected">NO</button>
+        <button class="chip">NO SÉ</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <p class="field-label">ETIQUETAS</p>
+      <div class="chip-row">
+        <button class="chip selected">#fear</button>
+        <button class="chip add">+ NUEVA</button>
+      </div>
+    </div>
+
+    <div class="divider">PROCESO CERRADO</div>
+
+    <details class="coded">
+      <summary>
+        <span class="coded-label">RESULTADO + ATRIBUCIÓN</span>
+        <span class="coded-strip" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </span>
+        <span class="coded-reveal-btn">DESTAPAR</span>
+      </summary>
+      <div class="coded-body">
+        <div class="field">
+          <p class="field-label">RESULTADO</p>
+          <div class="chip-row">
+            <button class="chip selected">GANÉ</button>
+            <button class="chip">PERDÍ</button>
+          </div>
+        </div>
+        <div class="field">
+          <p class="field-label">ATRIBUCIÓN</p>
+          <div class="chip-row">
+            <button class="chip">MI PLAN</button>
+            <button class="chip">ERROR DEL RIVAL</button>
+            <button class="chip selected">VARIANZA</button>
+          </div>
+        </div>
+        <p class="field-hint">Sé más duro acá cuando ganaste.</p>
+      </div>
+    </details>
+  </main>
+
+  <aside class="side">
+    <p class="side-title">REGISTRO RECIENTE</p>
+    <div class="side-item blind">
+      <span class="n">Nº046 · T8 · GANÉ</span>
+      <div class="r"><i></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="side-item">
+      <span class="n">Nº045 · T2 · PERDÍ</span>
+      <div class="r"><i></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="side-item">
+      <span class="n">Nº044 · T11 · GANÉ</span>
+      <div class="r"><i></i><i></i><i></i><i></i></div>
+    </div>
+  </aside>
+
+</div>
+
+<div class="save-bar">
+  <button class="save-btn">GUARDAR PARTIDA</button>
+</div>
+
+</body>
+</html>

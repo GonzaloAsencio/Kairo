@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-19T23:45:00Z",
+  "title": "Design System: Kairo",
+  "extensions": {
+    "colorMeta": {
+      "bg": { "role": "neutral", "displayName": "Negro Mate", "canonical": "#0a0a09", "tonalRamp": ["#050504", "#0a0a09", "#121210", "#1c1b18", "#2a2926", "#43413a", "#57554d", "#9a978d"] },
+      "accent": { "role": "primary", "displayName": "Ámbar de Señal", "canonical": "#f4a623", "tonalRamp": ["#4a2f04", "#7a4d08", "#a6690e", "#d1881a", "#f4a623", "#f7b950", "#fad07f", "#fce7b8"] },
+      "ink": { "role": "neutral", "displayName": "Hueso", "canonical": "#f2f0ea", "tonalRamp": ["#2a2926", "#43413a", "#57554d", "#77746a", "#9a978d", "#c2bfb3", "#e0ddd3", "#f2f0ea"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Solo el número de entrada (Nº047). Un único uso por pantalla." },
+      "label": { "displayName": "Label/Mono", "purpose": "Etiquetas de campo, chips, botones, nav, datos numéricos." },
+      "body": { "displayName": "Body", "purpose": "El único campo de texto libre y los hints de ayuda." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "reveal-coded", "value": "native <details> toggle, no easing authored", "purpose": "Único gesto animado del sistema: destapar resultado + atribución tras cerrar el proceso." }
+    ],
+    "breakpoints": [
+      { "name": "mobile", "value": "0px" },
+      { "name": "tablet", "value": "480px" },
+      { "name": "desktop", "value": "920px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "CTA principal, fijo al pie de pantalla (Guardar Partida).",
+      "html": "<button class=\"ds-btn-primary\">GUARDAR PARTIDA</button>",
+      "css": ".ds-btn-primary { background: #f4a623; color: #1a1206; border: none; font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 600; font-size: 13px; letter-spacing: 0.14em; padding: 15px; border-radius: 3px; width: 100%; cursor: pointer; } .ds-btn-primary:hover { filter: brightness(1.08); } .ds-btn-primary:focus-visible { outline: 2px solid #f4a623; outline-offset: 2px; }"
+    },
+    {
+      "name": "Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Selector de una sola opción o multi-selección (emoción, calidad de decisión, etiquetas). Botón, no texto libre.",
+      "html": "<button class=\"ds-chip\">MIEDO</button><button class=\"ds-chip ds-chip--selected\">EUFORIA</button>",
+      "css": ".ds-chip { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12.5px; letter-spacing: 0.03em; padding: 8px 13px; border: 1px solid #43413a; background: transparent; color: #9a978d; border-radius: 3px; cursor: pointer; } .ds-chip:hover { border-color: #9a978d; color: #f2f0ea; } .ds-chip--selected { border-color: #f4a623; color: #f4a623; background: rgba(244,166,35,0.08); } .ds-chip:focus-visible { outline: 2px solid #f4a623; outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Campo de texto/número. Fondo elevado, sin glow en foco, solo cambio de borde.",
+      "html": "<input type=\"text\" placeholder=\"opcional\" />",
+      "css": ".ds-input { width: 100%; background: #121210; border: 1px solid #43413a; color: #f2f0ea; font-size: 15px; padding: 11px 12px; border-radius: 3px; } .ds-input::placeholder { color: #57554d; } .ds-input:focus { border-color: #f4a623; outline: none; }"
+    },
+    {
+      "name": "Catalog Nav Tab",
+      "kind": "nav",
+      "refersTo": "nav-tab",
+      "description": "Pestaña de navegación con código de una letra (S/P/R/G) sobre el nombre completo.",
+      "html": "<div class=\"ds-tab ds-tab--active\"><span class=\"ds-tab-code\">P</span>PARTIDA</div>",
+      "css": ".ds-tab { flex: 1; text-align: center; padding: 13px 4px 11px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; color: #57554d; border-bottom: 2px solid transparent; } .ds-tab-code { display: block; font-size: 9px; margin-bottom: 3px; } .ds-tab--active { color: #f4a623; border-bottom-color: #f4a623; } .ds-tab--active .ds-tab-code { color: #f4a623; }"
+    },
+    {
+      "name": "Coded Reveal",
+      "kind": "custom",
+      "refersTo": "coded-reveal",
+      "description": "Componente de firma: resultado + atribución entran codificados (tira de bloques sin decodificar) y se revelan solo al tocar DESTAPAR, después de cerrar el proceso.",
+      "html": "<details class=\"ds-coded\"><summary><span class=\"ds-coded-label\">RESULTADO + ATRIBUCIÓN</span><span class=\"ds-coded-strip\"><i></i><i></i><i></i><i></i><i></i></span><span class=\"ds-coded-btn\">DESTAPAR</span></summary><div class=\"ds-coded-body\">GANÉ / PERDÍ · MI PLAN / ERROR DEL RIVAL / VARIANZA</div></details>",
+      "css": ".ds-coded { border: 1px solid #43413a; border-radius: 3px; padding: 16px; } .ds-coded > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; } .ds-coded > summary::-webkit-details-marker { display: none; } .ds-coded-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; color: #9a978d; } .ds-coded-strip { display: flex; gap: 3px; flex: 1; margin: 0 14px; } .ds-coded-strip i { flex: 1; height: 14px; background: #43413a; } .ds-coded-btn { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: #f4a623; border: 1px solid #f4a623; padding: 6px 10px; border-radius: 3px; } .ds-coded[open] .ds-coded-strip i:first-child { background: #f4a623; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "El Sello de Catálogo",
+    "overview": "Kairo se lee como una ficha de catálogo industrial (mundo Factory Records / Saville), no como una tarjeta de hábito ni una planilla. Cada partida es un número de entrada sobre negro mate absorbente, con un único acento ámbar reservado para el momento que el producto existe para señalar: el punto ciego. El resultado y la atribución entran codificados y solo se destapan después de que el proceso ya fue juzgado.",
+    "keyCharacteristics": [
+      "Negro mate absorbente como terreno; nunca blanco puro ni gris neutro plano.",
+      "Un acento ámbar, usado con extrema disciplina — nunca un segundo color de estado.",
+      "Sin tarjetas, sin sombras: la separación es siempre una regla de 1px.",
+      "El resultado de la partida se revela, no se muestra de entrada."
+    ],
+    "rules": [
+      { "name": "The One Amber Rule", "body": "El acento ámbar aparece en como máximo una función a la vez por pantalla. Nunca se combina con rojo o verde para crear un sistema semafórico — eso es gamificación.", "section": "colors" },
+      { "name": "The Mono-for-Measurement Rule", "body": "El monoespaciado se usa solo para dato, control o medición — nunca como disfraz decorativo de 'tecnológico' sobre prosa.", "section": "typography" },
+      { "name": "The No-Shadow Rule", "body": "Ningún componente usa box-shadow. La profundidad es siempre un salto de valor tonal o un borde de 1px.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do reservar el ámbar (#f4a623) para una sola función a la vez por pantalla.",
+      "Do separar contenido con reglas de 1px, nunca con tarjetas ni sombras.",
+      "Do usar JetBrains Mono para todo lo que sea dato, control o etiqueta; Archivo 900 solo para el número de entrada.",
+      "Do mantener el radio en 3px en todos los componentes, sin excepción.",
+      "Do ocultar resultado y atribución detrás de una revelación explícita."
+    ],
+    "donts": [
+      "Don't agregar un segundo color de acento ni un sistema semafórico rojo/verde.",
+      "Don't usar tarjetas redondeadas, sombras suaves ni glass/blur decorativo.",
+      "Don't usar emoji o glifos Unicode como iconos.",
+      "Don't usar una tipografía de display distinta a Archivo 900 para títulos.",
+      "Don't mostrar el resultado de la partida en el mismo golpe de vista que el proceso."
+    ]
+  }
+}
