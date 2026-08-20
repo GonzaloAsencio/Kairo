@@ -1,2 +1,35 @@
+# Tooling state
 .atl/
 .claude/settings.local.json
+.impeccable/questions/
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+*.local
+
+# Test output
+coverage/
+playwright-report/
+test-results/
+blob-report/
+.playwright/
+
+# Secrets — never commit
+.env
+.env.local
+.env.*.local
+
+# Supabase local state
+supabase/.branches/
+supabase/.temp/
+
+# Editor / OS
+.DS_Store
+*.swp
+.idea/
+.vscode/*
+!.vscode/extensions.json

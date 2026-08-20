@@ -21,10 +21,24 @@ Columns (Status field): `Todo` → `In Progress` → `Done`
 ```
 1. Issue created (status:needs-review) → add to project, Status: Todo
 2. Maintainer adds status:approved → still Todo, now unblocked
-3. Work starts, branch created → move to In Progress
-4. PR opened with "Closes #N" → stays In Progress
-5. PR merged → issue auto-closes → auto-moves to Done
+3. Maintainer verifies the Definition of Ready and adds agent-ready → workable
+4. Work starts, branch created → move to In Progress
+5. PR opened with "Closes #N" → stays In Progress
+6. PR merged (by the OTHER person) → issue auto-closes → auto-moves to Done
 ```
+
+## The `agent-ready` gate
+
+`agent-ready` is applied by **the maintainer only** (@GonzaloAsencio), and only
+once the Definition of Ready in `CONTRIBUTING.md` is fully met: module assigned,
+file-level scope declared, verifiable acceptance criteria, test level declared,
+ADR linked if relevant, and `status:approved` present.
+
+It is the single label that authorises an agent to work an issue unattended.
+**If you are an agent and the issue does not carry it, stop and report** — do
+not start work and do not apply the label yourself.
+
+Full label reference: `.github/labels.md`.
 
 ## Automation
 
