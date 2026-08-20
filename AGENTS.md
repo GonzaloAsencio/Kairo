@@ -147,8 +147,8 @@ npm run typecheck && npm run lint && npm run test:unit && npm run build
 
 - All **code** — identifiers, comments, filenames, commit messages, and all
   UI-visible copy — is written in **English**, from 2026-08-19 onward.
-- Repository documentation that agents consume (`AGENTS.md`, `CONTRIBUTING.md`,
-  `docs/adr/*`) is **English**.
+- Repository documentation that agents consume (`README.md`, `AGENTS.md`,
+  `CONTRIBUTING.md`, `docs/adr/*`) is **English**.
 - `PRODUCT.md`, `DESIGN.md`, `.impeccable/mocks/*` and the GitHub issue and PR
   templates are **Spanish** and stay that way. Do not translate them unless
   asked.
